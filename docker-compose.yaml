@@ -2,13 +2,10 @@ version: '3'
 
 services:
   database:
-    # at time of writing this, ARM64 is not supported so we make sure to use
-    # a supported platform: https://github.com/postgis/docker-postgis/issues/216
-    # Could possibly switch to https://github.com/vincentsarago/containers
     platform: linux/amd64
     image: postgis/postgis:15-3.4
     environment:
-      - POSTGRES_USER=username
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=postgis
     ports:
@@ -16,3 +13,23 @@ services:
     command: postgres -N 500
     volumes:
       - ./.pgdata:/var/lib/postgresql/data
+
+  data_ingestion:
+    build:
+      context: .
+      dockerfile: data_ingestion.dockerfile
+    depends_on:
+      - database
+    environment:
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgis
+    volumes:
+      - ./postgres:/pg_scripts
+    command: >
+      /bin/bash -c "
+      /pg_scripts/download_parquet.sh &&
+      /pg_scripts/load_to_prod.sh
+      "
