@@ -1,14 +1,14 @@
 FROM ubuntu:22.04
 
-RUN rm -f /etc/apt/sources.list.d/arrow.list
-
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
+    bash \
     curl \
     awscli \
     gdal-bin \
     postgresql-client && \
-    apt-get clean
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /pg_scripts
 

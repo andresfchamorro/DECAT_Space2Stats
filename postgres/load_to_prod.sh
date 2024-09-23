@@ -1,10 +1,4 @@
-#!/bin/bash
-
-
-# Load environment variables from db.env file
-if [ -f db.env ]; then
-  export $(cat db.env | grep -v '#' | awk '/=/ {print $1}')
-fi
+#!/bin/sh
 
 # Check if required environment variables are set
 if [ -z "$PGHOST" ] || [ -z "$PGPORT" ] || [ -z "$PGDATABASE" ] || [ -z "$PGUSER" ] || [ -z "$PGPASSWORD" ]; then
@@ -27,4 +21,3 @@ ogr2ogr -progress -f "PostgreSQL" \
     -nln $TABLE_NAME \
     -append \
     -lco SPATIAL_INDEX=NONE
-

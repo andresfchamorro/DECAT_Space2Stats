@@ -15,6 +15,7 @@ services:
       - ./.pgdata:/var/lib/postgresql/data
 
   data_ingestion:
+    platform: linux/amd64  
     build:
       context: .
       dockerfile: data_ingestion.dockerfile
@@ -28,8 +29,4 @@ services:
       - POSTGRES_DB=postgis
     volumes:
       - ./postgres:/pg_scripts
-    command: >
-      /bin/bash -c "
-      /pg_scripts/download_parquet.sh &&
-      /pg_scripts/load_to_prod.sh
-      "
+    command: /bin/ash -c "/pg_scripts/download_parquet.sh && /pg_scripts/load_to_prod.sh"

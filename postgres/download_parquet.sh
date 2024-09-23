@@ -1,7 +1,4 @@
-!/bin/bash
-
-# Load environment variables from wb_aws.env
-source wb_aws.env
+#!/bin/sh
 
 # S3 and file configuration
 S3_BUCKET="wbg-geography01"
