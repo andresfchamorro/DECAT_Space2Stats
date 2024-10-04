@@ -1,4 +1,5 @@
 aws-cdk-lib==2.130.0
+aws_cdk.aws_lambda_python_alpha
 constructs==10.3.0
 
 pydantic_settings>=2.0
