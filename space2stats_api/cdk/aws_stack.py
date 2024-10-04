@@ -22,6 +22,14 @@ class Space2StatsStack(Stack):
             lifecycle_rules=[s3.LifecycleRule(expiration=Duration.days(1))],
         )
 
+        lambda_layer = _lambda.LayerVersion(
+            self,
+            "Space2StatsDependenciesLayer",
+            code=_lambda.AssetCode("./layer.zip"),
+            compatible_runtimes=[_lambda.Runtime.PYTHON_3_11],
+            description="Layer with common dependencies for Space2Stats",
+        )
+
         lambda_function = PythonFunction(
             self,
             "Space2StatsFunction",
@@ -30,6 +38,7 @@ class Space2StatsStack(Stack):
             index="space2stats/api/handler.py",
             timeout=Duration.seconds(120),
             handler="handler",
+            layers=[lambda_layer],
             environment={
                 "S3_BUCKET_NAME": bucket.bucket_name,
                 **app_settings.model_dump(),

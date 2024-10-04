@@ -107,3 +107,5 @@ cdk.out
 lambda_layer
 .venv
 .envrc
+*layer*
+layer.zip
